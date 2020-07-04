@@ -9,10 +9,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.LocaleContextResolver;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
@@ -27,7 +31,24 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
                 LocaleContextHolder.getLocale());
         String mensagemDev =ex.getCause().getMessage();
 
-        return handleExceptionInternal(ex, new Erro(mensagemUsuario, mensagemDev), headers, status, request);
+        return handleExceptionInternal(ex, new Erro(mensagemUsuario, mensagemDev), headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        var errors = criarListaErro(ex.getBindingResult());
+        return handleExceptionInternal(ex, errors, headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    private List<Erro> criarListaErro(BindingResult bindingResult) {
+
+        var error = bindingResult.getFieldErrors().stream().map(fieldError -> {
+            String mensagemUsuario = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+            String mensagemDev = fieldError.toString();
+            return new Erro(mensagemUsuario, mensagemDev);
+        }).collect(Collectors.toList());
+
+        return error;
     }
 
     @Getter
