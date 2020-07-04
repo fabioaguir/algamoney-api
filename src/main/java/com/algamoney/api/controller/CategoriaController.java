@@ -2,7 +2,10 @@ package com.algamoney.api.controller;
 
 import com.algamoney.api.domain.model.Categoria;
 import com.algamoney.api.domain.repository.CategoriaRepository;
+import com.algamoney.api.event.RecursoCriadoEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,6 +23,9 @@ public class CategoriaController {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
     @GetMapping
     public ResponseEntity<?> listar() {
         List<Categoria> categorias = this.categoriaRepository.findAll();
@@ -29,19 +35,13 @@ public class CategoriaController {
     @PostMapping
     public ResponseEntity<Categoria> criar(@Valid  @RequestBody Categoria categoria, HttpServletResponse response) {
         Categoria categoriaSalva = this.categoriaRepository.save(categoria);
-
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("{codigo}")
-                .buildAndExpand(categoria.getCodigo()).toUri();
-
-        response.setHeader("Location", uri.toASCIIString());
-
-        return ResponseEntity.created(uri).body(categoriaSalva);
+        this.eventPublisher.publishEvent(new RecursoCriadoEvent(this, response ,categoriaSalva.getCodigo()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
     }
 
     @GetMapping("/{codigo}")
     public ResponseEntity<Categoria> buscar(@PathVariable Long codigo) {
         Optional<Categoria> categoria = this.categoriaRepository.findById(codigo);
-
         return !categoria.isEmpty() ? ResponseEntity.ok(categoria.get()) : ResponseEntity.notFound().build();
     }
 }
