@@ -61,4 +61,9 @@ public class PessoaController {
         Pessoa pessoaUpdated = this.pessoaService.atualizar(codigo, pessoa);
         return ResponseEntity.ok(pessoaUpdated);
     }
+
+    @PutMapping("/{codigo}/ativo")
+    public void atualizar(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+        this.pessoaService.atualizarPropriedadeAtivo(codigo, ativo);
+    }
 }
