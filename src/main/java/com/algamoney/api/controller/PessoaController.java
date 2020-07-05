@@ -2,9 +2,12 @@ package com.algamoney.api.controller;
 
 import com.algamoney.api.domain.model.Pessoa;
 import com.algamoney.api.domain.repository.PessoaRepository;
+import com.algamoney.api.domain.service.PessoaService;
 import com.algamoney.api.event.RecursoCriadoEvent;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,9 @@ public class PessoaController {
 
     @Autowired
     private PessoaRepository pessoaRepository;
+
+    @Autowired
+    private PessoaService pessoaService;
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
@@ -50,5 +56,9 @@ public class PessoaController {
         this.pessoaRepository.deleteById(codigo);
     }
 
-
+    @PutMapping("/{codigo}")
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @RequestBody Pessoa pessoa) {
+        Pessoa pessoaUpdated = this.pessoaService.atualizar(codigo, pessoa);
+        return ResponseEntity.ok(pessoaUpdated);
+    }
 }
