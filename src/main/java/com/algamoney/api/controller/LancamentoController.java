@@ -2,6 +2,7 @@ package com.algamoney.api.controller;
 
 import com.algamoney.api.domain.model.Lancamento;
 import com.algamoney.api.domain.repository.LancamentoRepository;
+import com.algamoney.api.domain.repository.filter.LancamentoFilter;
 import com.algamoney.api.domain.service.LancamentoService;
 import com.algamoney.api.domain.service.exception.PessoaInexistenteOuInativaException;
 import com.algamoney.api.event.RecursoCriadoEvent;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +41,8 @@ public class LancamentoController {
     private LancamentoService lancamentoService;
 
     @GetMapping
-    public ResponseEntity<?> listar() {
-        List<Lancamento> lancamentos = this.lancamentoRepository.findAll();
-        return ResponseEntity.ok(lancamentos);
+    public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return this.lancamentoRepository.filtrar(lancamentoFilter, pageable);
     }
 
     @PostMapping
@@ -64,5 +66,10 @@ public class LancamentoController {
 
         var errors = Arrays.asList(new AlgamoneyExceptionHandler.Erro(mensagemUsuario, mensagemDev));
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @DeleteMapping("/{codigo}")
+    public void remover(@PathVariable Long codigo){
+        this.lancamentoRepository.deleteById(codigo);
     }
 }
