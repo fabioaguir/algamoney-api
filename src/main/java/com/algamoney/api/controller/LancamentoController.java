@@ -42,13 +42,13 @@ public class LancamentoController {
     private LancamentoService lancamentoService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') ans #oauth2.hasScope('read')")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
         return this.lancamentoRepository.filtrar(lancamentoFilter, pageable);
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') ans #oauth2.hasScope('write')")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
     public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
         Lancamento lancamentoSalvo = this.lancamentoService.salvar(lancamento);
         this.eventPublisher.publishEvent(new RecursoCriadoEvent(this, response ,lancamentoSalvo.getCodigo()));
@@ -56,14 +56,14 @@ public class LancamentoController {
     }
 
     @GetMapping("/{codigo}")
-    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') ans #oauth2.hasScope('read')")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public ResponseEntity<Lancamento> buscar(@PathVariable Long codigo) {
         Optional<Lancamento> lancamento = this.lancamentoRepository.findById(codigo);
         return !lancamento.isEmpty() ? ResponseEntity.ok(lancamento.get()) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{codigo}")
-    @PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') ans #oauth2.hasScope('write')")
+    @PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
     public void remover(@PathVariable Long codigo){
         this.lancamentoRepository.deleteById(codigo);
     }
