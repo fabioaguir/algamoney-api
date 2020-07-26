@@ -1,9 +1,6 @@
 package com.algamoney.api.domain.dto;
 
-import com.algamoney.api.domain.model.Categoria;
-import com.algamoney.api.domain.model.Pessoa;
 import com.algamoney.api.domain.model.TipoLancamento;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
