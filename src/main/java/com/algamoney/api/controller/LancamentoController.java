@@ -1,5 +1,6 @@
 package com.algamoney.api.controller;
 
+import com.algamoney.api.domain.dto.LancamentoDTO;
 import com.algamoney.api.domain.model.Lancamento;
 import com.algamoney.api.domain.repository.LancamentoRepository;
 import com.algamoney.api.domain.repository.filter.LancamentoFilter;
@@ -45,6 +46,12 @@ public class LancamentoController {
     @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
         return this.lancamentoRepository.filtrar(lancamentoFilter, pageable);
+    }
+
+    @GetMapping("/resumir")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+    public Page<LancamentoDTO> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
+        return this.lancamentoRepository.resumir(lancamentoFilter, pageable);
     }
 
     @PostMapping
