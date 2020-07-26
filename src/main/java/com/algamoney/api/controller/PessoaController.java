@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -33,12 +34,14 @@ public class PessoaController {
     private ApplicationEventPublisher eventPublisher;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') ans #oauth2.hasScope('read')")
     public ResponseEntity<?> listar() {
         List<Pessoa> pessoas = this.pessoaRepository.findAll();
         return ResponseEntity.ok(pessoas);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') ans #oauth2.hasScope('write')")
     public ResponseEntity<Pessoa> criar(@Valid  @RequestBody Pessoa pessoa, HttpServletResponse response) {
         Pessoa pessoaSalva = this.pessoaRepository.save(pessoa);
         this.eventPublisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
@@ -46,23 +49,27 @@ public class PessoaController {
     }
 
     @GetMapping("/{codigo}")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') ans #oauth2.hasScope('read')")
     public ResponseEntity<Pessoa> buscar(@PathVariable Long codigo) {
         Optional<Pessoa> pessoa = this.pessoaRepository.findById(codigo);
         return !pessoa.isEmpty() ? ResponseEntity.ok(pessoa.get()) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{codigo}")
+    @PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA') ans #oauth2.hasScope('write')")
     public void remover(@PathVariable Long codigo){
         this.pessoaRepository.deleteById(codigo);
     }
 
     @PutMapping("/{codigo}")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') ans #oauth2.hasScope('write')")
     public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @RequestBody Pessoa pessoa) {
         Pessoa pessoaUpdated = this.pessoaService.atualizar(codigo, pessoa);
         return ResponseEntity.ok(pessoaUpdated);
     }
 
     @PutMapping("/{codigo}/ativo")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') ans #oauth2.hasScope('write')")
     public void atualizar(@PathVariable Long codigo, @RequestBody Boolean ativo) {
         this.pessoaService.atualizarPropriedadeAtivo(codigo, ativo);
     }
