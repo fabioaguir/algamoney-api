@@ -62,6 +62,12 @@ public class LancamentoController {
         return !lancamento.isEmpty() ? ResponseEntity.ok(lancamento.get()) : ResponseEntity.notFound().build();
     }
 
+    @DeleteMapping("/{codigo}")
+    @PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') ans #oauth2.hasScope('write')")
+    public void remover(@PathVariable Long codigo){
+        this.lancamentoRepository.deleteById(codigo);
+    }
+
     @ExceptionHandler({ PessoaInexistenteOuInativaException.class })
     public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex) {
         String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null,
@@ -70,11 +76,5 @@ public class LancamentoController {
 
         var errors = Arrays.asList(new AlgamoneyExceptionHandler.Erro(mensagemUsuario, mensagemDev));
         return ResponseEntity.badRequest().body(errors);
-    }
-
-    @DeleteMapping("/{codigo}")
-    @PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') ans #oauth2.hasScope('write')")
-    public void remover(@PathVariable Long codigo){
-        this.lancamentoRepository.deleteById(codigo);
     }
 }
