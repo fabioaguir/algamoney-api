@@ -66,7 +66,7 @@ public class LancamentoController {
     @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public ResponseEntity<Lancamento> buscar(@PathVariable Long codigo) {
         Optional<Lancamento> lancamento = this.lancamentoRepository.findById(codigo);
-        return !lancamento.isEmpty() ? ResponseEntity.ok(lancamento.get()) : ResponseEntity.notFound().build();
+        return !lancamento.isPresent() ? ResponseEntity.ok(lancamento.get()) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{codigo}")
@@ -81,7 +81,7 @@ public class LancamentoController {
                 LocaleContextHolder.getLocale());
         String mensagemDev = ex.toString();
 
-        var errors = Arrays.asList(new AlgamoneyExceptionHandler.Erro(mensagemUsuario, mensagemDev));
+        List<AlgamoneyExceptionHandler.Erro> errors = Arrays.asList(new AlgamoneyExceptionHandler.Erro(mensagemUsuario, mensagemDev));
         return ResponseEntity.badRequest().body(errors);
     }
 }

@@ -29,8 +29,8 @@ public class PessoaService {
 
     private Pessoa buscarPessoa(Long codigo) {
         Optional<Pessoa> pessoa = this.pessoaRepository.findById(codigo);
-        return pessoa.orElseThrow(() -> {
-            throw new EmptyResultDataAccessException(1);
-        });
+        return pessoa.orElseThrow(() ->
+             new EmptyResultDataAccessException(1)
+        );
     }
 }

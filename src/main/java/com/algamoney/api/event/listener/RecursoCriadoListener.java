@@ -13,8 +13,8 @@ public class RecursoCriadoListener implements ApplicationListener<RecursoCriadoE
 
     @Override
     public void onApplicationEvent(RecursoCriadoEvent recursoCriadoEvent) {
-        var response = recursoCriadoEvent.getResponse();
-        var codigo = recursoCriadoEvent.getCodigo();
+        HttpServletResponse response = recursoCriadoEvent.getResponse();
+        Long codigo = recursoCriadoEvent.getCodigo();
 
         adicionarHeaderLocation(response, codigo);
     }
