@@ -28,14 +28,14 @@ public class CategoriaController {
     private ApplicationEventPublisher eventPublisher;
 
     @GetMapping
-    @PreAuthorize("hasAuthotity('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
     public ResponseEntity<?> listar() {
         List<Categoria> categorias = this.categoriaRepository.findAll();
         return ResponseEntity.ok(categorias);
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthotity('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
     public ResponseEntity<Categoria> criar(@Valid  @RequestBody Categoria categoria, HttpServletResponse response) {
         Categoria categoriaSalva = this.categoriaRepository.save(categoria);
         this.eventPublisher.publishEvent(new RecursoCriadoEvent(this, response ,categoriaSalva.getCodigo()));
@@ -43,7 +43,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/{codigo}")
-    @PreAuthorize("hasAuthotity('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
     public ResponseEntity<Categoria> buscar(@PathVariable Long codigo) {
         Optional<Categoria> categoria = this.categoriaRepository.findById(codigo);
         return !categoria.isPresent() ? ResponseEntity.ok(categoria.get()) : ResponseEntity.notFound().build();
