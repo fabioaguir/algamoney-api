@@ -52,7 +52,7 @@ public class PessoaController {
     @PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
     public ResponseEntity<Pessoa> buscar(@PathVariable Long codigo) {
         Optional<Pessoa> pessoa = this.pessoaRepository.findById(codigo);
-        return !pessoa.isEmpty() ? ResponseEntity.ok(pessoa.get()) : ResponseEntity.notFound().build();
+        return !pessoa.isPresent() ? ResponseEntity.ok(pessoa.get()) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{codigo}")

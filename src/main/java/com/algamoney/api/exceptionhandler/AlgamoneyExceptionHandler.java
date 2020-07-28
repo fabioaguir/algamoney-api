@@ -36,13 +36,13 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
                 LocaleContextHolder.getLocale());
         String mensagemDev = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
 
-        var errors = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
+        List<Erro> errors = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
         return handleExceptionInternal(ex, errors, headers, HttpStatus.BAD_REQUEST, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        var errors = criarListaErro(ex.getBindingResult());
+        List<Erro> errors = criarListaErro(ex.getBindingResult());
         return handleExceptionInternal(ex, errors, headers, HttpStatus.BAD_REQUEST, request);
     }
 
@@ -52,7 +52,7 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
                 LocaleContextHolder.getLocale());
         String mensagemDev = ex.getMessage();
 
-        var errors = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
+        List<Erro> errors = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
         return handleExceptionInternal(ex,errors, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
@@ -62,13 +62,13 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
                 LocaleContextHolder.getLocale());
         String mensagemDev = ExceptionUtils.getRootCauseMessage(ex);
 
-        var errors = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
+        List<Erro> errors = Arrays.asList(new Erro(mensagemUsuario, mensagemDev));
         return handleExceptionInternal(ex,errors, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     private List<Erro> criarListaErro(BindingResult bindingResult) {
 
-        var error = bindingResult.getFieldErrors().stream().map(fieldError -> {
+        List<Erro> error = bindingResult.getFieldErrors().stream().map(fieldError -> {
             String mensagemUsuario = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
             String mensagemDev = fieldError.toString();
             return new Erro(mensagemUsuario, mensagemDev);

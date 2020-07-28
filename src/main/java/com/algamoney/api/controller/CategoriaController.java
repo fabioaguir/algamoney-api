@@ -46,6 +46,6 @@ public class CategoriaController {
     @PreAuthorize("hasAuthotity('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
     public ResponseEntity<Categoria> buscar(@PathVariable Long codigo) {
         Optional<Categoria> categoria = this.categoriaRepository.findById(codigo);
-        return !categoria.isEmpty() ? ResponseEntity.ok(categoria.get()) : ResponseEntity.notFound().build();
+        return !categoria.isPresent() ? ResponseEntity.ok(categoria.get()) : ResponseEntity.notFound().build();
     }
 }
