@@ -2,6 +2,7 @@ package com.algamoney.api.controller;
 
 import com.algamoney.api.domain.dto.LancamentoDTO;
 import com.algamoney.api.domain.model.Lancamento;
+import com.algamoney.api.domain.model.Pessoa;
 import com.algamoney.api.domain.repository.LancamentoRepository;
 import com.algamoney.api.domain.repository.filter.LancamentoFilter;
 import com.algamoney.api.domain.service.LancamentoService;
@@ -73,6 +74,17 @@ public class LancamentoController {
     @PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
     public void remover(@PathVariable Long codigo){
         this.lancamentoRepository.deleteById(codigo);
+    }
+
+    @PutMapping("/{codigo}")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+    public ResponseEntity<Lancamento> atualizar(@PathVariable Long codigo, @RequestBody Lancamento lancamento) {
+        try {
+            Lancamento lancamentoSalvo = lancamentoService.atualizar(codigo, lancamento);
+            return ResponseEntity.ok(lancamentoSalvo);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @ExceptionHandler({ PessoaInexistenteOuInativaException.class })
