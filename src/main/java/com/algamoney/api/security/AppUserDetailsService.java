@@ -3,9 +3,9 @@ package com.algamoney.api.security;
 import com.algamoney.api.domain.model.Usuario;
 import com.algamoney.api.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+@Profile("oauth-security")
 @Service
 public class AppUserDetailsService implements UserDetailsService {
 
