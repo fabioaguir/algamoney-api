@@ -1,5 +1,6 @@
 package com.algamoney.api.domain.service;
 
+import com.algamoney.api.domain.model.Lancamento;
 import com.algamoney.api.domain.model.Pessoa;
 import com.algamoney.api.domain.repository.PessoaRepository;
 import org.springframework.beans.BeanUtils;
@@ -16,18 +17,18 @@ public class PessoaService {
     private PessoaRepository pessoaRepository;
 
     public Pessoa atualizar(Long codigo, Pessoa pessoa) {
-        Pessoa pessoaSalva = buscarPessoa(codigo);
+        Pessoa pessoaSalva = buscar(codigo);
         BeanUtils.copyProperties(pessoa, pessoaSalva, "codigo");
         return this.pessoaRepository.save(pessoaSalva);
     }
 
     public void atualizarPropriedadeAtivo(Long codigo, Boolean ativo) {
-        Pessoa pessoa = buscarPessoa(codigo);
+        Pessoa pessoa = buscar(codigo);
         pessoa.setAtivo(ativo);
         this.pessoaRepository.save(pessoa);
     }
 
-    private Pessoa buscarPessoa(Long codigo) {
+    public Pessoa buscar(Long codigo) {
         Optional<Pessoa> pessoa = this.pessoaRepository.findById(codigo);
         return pessoa.orElseThrow(() ->
              new EmptyResultDataAccessException(1)

@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-@Profile("oauth-security")
 @Service
 public class AppUserDetailsService implements UserDetailsService {
 

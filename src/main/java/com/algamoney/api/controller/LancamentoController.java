@@ -65,9 +65,8 @@ public class LancamentoController {
 
     @GetMapping("/{codigo}")
     @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-    public ResponseEntity<Lancamento> buscar(@PathVariable Long codigo) {
-        Optional<Lancamento> lancamento = this.lancamentoRepository.findById(codigo);
-        return !lancamento.isPresent() ? ResponseEntity.ok(lancamento.get()) : ResponseEntity.notFound().build();
+    public Lancamento buscar(@PathVariable Long codigo) {
+        return this.lancamentoService.buscar(codigo);
     }
 
     @DeleteMapping("/{codigo}")

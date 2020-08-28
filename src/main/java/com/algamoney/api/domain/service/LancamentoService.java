@@ -27,7 +27,7 @@ public class LancamentoService {
     }
 
     public Lancamento atualizar(Long codigo, Lancamento lancamento) {
-        Lancamento lancamentoSalvo = buscarLancamentoExistente(codigo);
+        Lancamento lancamentoSalvo = buscar(codigo);
         if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
             validarPessoa(lancamento);
         }
@@ -47,7 +47,7 @@ public class LancamentoService {
         }
     }
 
-    private Lancamento buscarLancamentoExistente(Long codigo) {
+    public Lancamento buscar(Long codigo) {
         Optional<Lancamento> lancamento = this.lancamentoRepository.findById(codigo);
         return lancamento.orElseThrow(() ->
                 new EmptyResultDataAccessException(1)
