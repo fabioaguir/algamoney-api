@@ -1,6 +1,8 @@
 package com.algamoney.api.controller;
 
 import com.algamoney.api.domain.dto.LancamentoDTO;
+import com.algamoney.api.domain.dto.LancamentoEstatisticaCategoria;
+import com.algamoney.api.domain.dto.LancamentoEstatisticaDia;
 import com.algamoney.api.domain.model.Lancamento;
 import com.algamoney.api.domain.model.Pessoa;
 import com.algamoney.api.domain.repository.LancamentoRepository;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -94,5 +97,17 @@ public class LancamentoController {
 
         List<AlgamoneyExceptionHandler.Erro> errors = Arrays.asList(new AlgamoneyExceptionHandler.Erro(mensagemUsuario, mensagemDev));
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @GetMapping("/estatisticas/por-categoria")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+    public List<LancamentoEstatisticaCategoria> porCategoria() {
+        return this.lancamentoRepository.porCategoria(LocalDate.now());
+    }
+
+    @GetMapping("/estatisticas/por-dia")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+    public List<LancamentoEstatisticaDia> porDia() {
+        return this.lancamentoRepository.porDia(LocalDate.now());
     }
 }
