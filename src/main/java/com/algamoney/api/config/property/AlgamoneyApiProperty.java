@@ -10,6 +10,12 @@ public class AlgamoneyApiProperty {
 
     private final Seguranca seguranca = new Seguranca();
 
+    private final Mail mail = new Mail();
+
+    public Mail getMail() {
+        return mail;
+    }
+
     public Seguranca getSeguranca() {
         return seguranca;
     }
@@ -25,5 +31,17 @@ public class AlgamoneyApiProperty {
     @Data
     public static class Seguranca {
         private boolean enableHttps;
+    }
+
+    @Data
+    public static class Mail {
+
+        private String host;
+
+        private Integer port;
+
+        private String username;
+
+        private String password;
     }
 }
