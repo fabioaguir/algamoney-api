@@ -57,5 +57,7 @@ public class AlgamoneyApiProperty {
         private String accessKeyId;
 
         private String secretAccessKey;
+
+        private String bucket = "aw-algamoney-hive-arquivos";
     }
 }
