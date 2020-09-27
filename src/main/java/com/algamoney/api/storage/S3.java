@@ -38,13 +38,13 @@ public class S3 {
 
         ObjectMetadata objectMetadata = getObjectMetadata(arquivo);
 
-        String nomeUnico = gerarNomeUnico(arquivo.getOriginalFilename());
-
-        return putObjectRequest(arquivo, acl, objectMetadata, nomeUnico);
+        return putObjectRequest(arquivo, acl, objectMetadata);
     }
 
-    private String putObjectRequest(MultipartFile arquivo, AccessControlList acl, ObjectMetadata objectMetadata, String nomeUnico) {
+    private String putObjectRequest(MultipartFile arquivo, AccessControlList acl, ObjectMetadata objectMetadata) {
         try {
+            String nomeUnico = gerarNomeUnico(arquivo.getOriginalFilename());
+
             PutObjectRequest putObjectRequest = new PutObjectRequest(
                     property.getS3().getBucket(),
                     nomeUnico,
