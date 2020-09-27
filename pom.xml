@@ -15,7 +15,11 @@
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>8</java.version>
+
+		<aws-java-sdk.version>1.11.274</aws-java-sdk.version>
 	</properties>
 
 	<dependencies>
@@ -104,6 +108,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<!-- Amazon S3 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>${aws-java-sdk.version}</version>
 		</dependency>
 
 		<dependency>

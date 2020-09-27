@@ -12,9 +12,7 @@ public class AlgamoneyApiProperty {
 
     private final Mail mail = new Mail();
 
-    public Mail getMail() {
-        return mail;
-    }
+    private final S3 s3 = new S3();
 
     public Seguranca getSeguranca() {
         return seguranca;
@@ -22,6 +20,14 @@ public class AlgamoneyApiProperty {
 
     public String getOriginPermitida() {
         return originPermitida;
+    }
+
+    public Mail getMail() {
+        return mail;
+    }
+
+    public S3 getS3() {
+        return s3;
     }
 
     public void setOriginPermitida(String originPermitida) {
@@ -43,5 +49,13 @@ public class AlgamoneyApiProperty {
         private String username;
 
         private String password;
+    }
+
+    @Data
+    public static class S3 {
+
+        private String accessKeyId;
+
+        private String secretAccessKey;
     }
 }
