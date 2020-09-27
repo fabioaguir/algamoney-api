@@ -22,9 +22,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -109,5 +113,15 @@ public class LancamentoController {
     @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
     public List<LancamentoEstatisticaDia> porDia() {
         return this.lancamentoRepository.porDia(LocalDate.now());
+    }
+
+    @PostMapping("/anexo")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+    public String uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
+        OutputStream out = new FileOutputStream(
+                "/home/alexandre/Desktop/anexo--" + anexo.getOriginalFilename());
+        out.write(anexo.getBytes());
+        out.close();
+        return "ok";
     }
 }
