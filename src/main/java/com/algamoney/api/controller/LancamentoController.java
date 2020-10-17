@@ -1,17 +1,17 @@
 package com.algamoney.api.controller;
 
+import com.algamoney.api.domain.dto.Anexo;
 import com.algamoney.api.domain.dto.LancamentoDTO;
 import com.algamoney.api.domain.dto.LancamentoEstatisticaCategoria;
 import com.algamoney.api.domain.dto.LancamentoEstatisticaDia;
 import com.algamoney.api.domain.model.Lancamento;
-import com.algamoney.api.domain.model.Pessoa;
 import com.algamoney.api.domain.repository.LancamentoRepository;
 import com.algamoney.api.domain.repository.filter.LancamentoFilter;
 import com.algamoney.api.domain.service.LancamentoService;
 import com.algamoney.api.domain.service.exception.PessoaInexistenteOuInativaException;
 import com.algamoney.api.event.RecursoCriadoEvent;
 import com.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import com.algamoney.api.storage.S3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -26,13 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -49,6 +46,9 @@ public class LancamentoController {
 
     @Autowired
     private LancamentoService lancamentoService;
+
+    @Autowired
+    private S3 s3;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
@@ -117,11 +117,8 @@ public class LancamentoController {
 
     @PostMapping("/anexo")
     @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
-    public String uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
-        OutputStream out = new FileOutputStream(
-                "/home/alexandre/Desktop/anexo--" + anexo.getOriginalFilename());
-        out.write(anexo.getBytes());
-        out.close();
-        return "ok";
+    public Anexo uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
+        String nome = s3.salvarTemporariamente(anexo);
+        return new Anexo(nome, s3.configurarUrl(nome));
     }
 }
