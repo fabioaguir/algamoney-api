@@ -9,12 +9,12 @@ import org.springframework.util.StringUtils;
 
 public class LancamentoAnexoListener {
 
-    @PostLoad
-    public void postLoad(Lancamento lancamento) {
-        if (StringUtils.hasText(lancamento.getAnexo())) {
-            S3 s3 = AlgamoneyApiApplication.getBean(S3.class);
-            lancamento.setUrlAnexo(s3.configurarUrl(lancamento.getAnexo()));
-        }
-    }
+//    @PostLoad
+//    public void postLoad(Lancamento lancamento) {
+//        if (StringUtils.hasText(lancamento.getAnexo())) {
+//            S3 s3 = AlgamoneyApiApplication.getBean(S3.class);
+//            lancamento.setUrlAnexo(s3.configurarUrl(lancamento.getAnexo()));
+//        }
+//    }
 
 }

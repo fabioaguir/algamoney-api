@@ -115,10 +115,10 @@ public class LancamentoController {
         return this.lancamentoRepository.porDia(LocalDate.now());
     }
 
-    @PostMapping("/anexo")
-    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
-    public Anexo uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
-        String nome = s3.salvarTemporariamente(anexo);
-        return new Anexo(nome, s3.configurarUrl(nome));
-    }
+//    @PostMapping("/anexo")
+//    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+//    public Anexo uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
+//        String nome = s3.salvarTemporariamente(anexo);
+//        return new Anexo(nome, s3.configurarUrl(nome));
+//    }
 }
